@@ -154,7 +154,7 @@ public class AuthorizationServerEndpointsConfiguration {
 	 * <code>@Transactional</code> (in case the token store supports them). If
 	 * you are overriding the token services in an
 	 * {@link AuthorizationServerConfigurer} consider making it a
-	 * <code>@Bean</code> for the same reason (assuming you need transactions,
+	 * <code>@Bean</code> for the same reason (assuming you need authorisedTokenList,
 	 * e.g. for a JDBC token store).
 	 * 
 	 * @return an AuthorizationServerTokenServices

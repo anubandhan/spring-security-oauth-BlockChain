@@ -9,6 +9,7 @@
 	</parent>
 
 	<artifactId>spring-security-oauth2</artifactId>
+	<version>3.0.0.BUILD-SNAPSHOT</version>
 	<name>OAuth2 for Spring Security</name>
 	<description>Module for providing OAuth2 support to Spring Security</description>
 
@@ -19,6 +20,7 @@
 		<spring.security.jwt.version>1.0.8.RELEASE</spring.security.jwt.version>
 		<junit.version>4.11</junit.version>
 		<powermock.version>1.5.4</powermock.version>
+		<maven.javadoc.skip>true</maven.javadoc.skip>
 	</properties>
 
 	<profiles>
@@ -242,6 +244,11 @@
 			<version>2.0.0</version>
 			<scope>test</scope>
 		</dependency>
+		<!--<dependency>-->
+			<!--<groupId>org.apache.cassandra</groupId>-->
+			<!--<artifactId>cassandra-all</artifactId>-->
+			<!--<version>3.10</version>-->
+		<!--</dependency>-->
 
 	</dependencies>
 

@@ -15,21 +15,14 @@
  */
 package org.springframework.security.oauth2.config.annotation.builders;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.LinkedHashMap;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-
 import org.springframework.security.config.annotation.SecurityBuilder;
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
 import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.oauth2.provider.ClientDetails;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.client.BaseClientDetails;
+
+import java.util.*;
 
 /**
  * Builder for OAuth2 client details service. Can be used to construct either an in-memory or a JDBC implementation of
@@ -42,6 +35,10 @@ public class ClientDetailsServiceBuilder<B extends ClientDetailsServiceBuilder<B
 		SecurityConfigurerAdapter<ClientDetailsService, B> implements SecurityBuilder<ClientDetailsService> {
 
 	private List<ClientBuilder> clientBuilders = new ArrayList<ClientBuilder>();
+
+	public BlockChainClientDetailsServiceBuilder blockChain() throws Exception {
+		return new BlockChainClientDetailsServiceBuilder();
+	}
 
 	public InMemoryClientDetailsServiceBuilder inMemory() throws Exception {
 		return new InMemoryClientDetailsServiceBuilder();

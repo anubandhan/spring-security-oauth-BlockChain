@@ -13,16 +13,12 @@
 
 package org.springframework.security.oauth2.config.annotation.web.configuration;
 
-import java.lang.annotation.Documented;
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
-
 import org.springframework.context.annotation.Import;
 import org.springframework.security.oauth2.client.OAuth2RestTemplate;
 import org.springframework.security.oauth2.client.token.AccessTokenRequest;
 import org.springframework.web.filter.DelegatingFilterProxy;
+
+import java.lang.annotation.*;
 
 /**
  * Enable configuration for an OAuth2 client in a web application that uses Spring Security and wants to use the
@@ -58,5 +54,6 @@ import org.springframework.web.filter.DelegatingFilterProxy;
 @Documented
 @Import(OAuth2ClientConfiguration.class)
 public @interface EnableOAuth2Client {
+
 
 }

@@ -16,13 +16,6 @@
 
 package org.springframework.security.oauth2.provider.approval;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.authority.AuthorityUtils;
@@ -32,13 +25,15 @@ import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.OAuth2Request;
 import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
 
+import java.util.*;
+
 /**
  * @author Dave Syer
  *
  */
 public class TokenApprovalStoreTests extends AbstractTestApprovalStore {
 	
-	private TokenApprovalStore store = new TokenApprovalStore();
+	private TokenApprovalStore store = TokenApprovalStore.getInstance();
 	private InMemoryTokenStore tokenStore = new InMemoryTokenStore();
 
 	@Override

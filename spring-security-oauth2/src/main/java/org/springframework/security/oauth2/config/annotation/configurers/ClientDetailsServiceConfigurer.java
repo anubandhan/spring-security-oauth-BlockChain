@@ -15,13 +15,14 @@
  */
 package org.springframework.security.oauth2.config.annotation.configurers;
 
-import javax.sql.DataSource;
-
 import org.springframework.security.config.annotation.SecurityConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.builders.BlockChainClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.builders.ClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.builders.InMemoryClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.config.annotation.builders.JdbcClientDetailsServiceBuilder;
 import org.springframework.security.oauth2.provider.ClientDetailsService;
+
+import javax.sql.DataSource;
 
 /**
  * @author Rob Winch
@@ -37,6 +38,18 @@ public class ClientDetailsServiceConfigurer extends
 	public ClientDetailsServiceBuilder<?> withClientDetails(ClientDetailsService clientDetailsService) throws Exception {
 		setBuilder(getBuilder().clients(clientDetailsService));
 		return this.and();
+	}
+
+	/**
+	 * This method will be called to initialize service. Probably we need to pass information regarding client Via DB or something.
+	 *
+	 * @return
+	 * @throws Exception
+	 */
+	public BlockChainClientDetailsServiceBuilder blockChain() throws Exception {
+		BlockChainClientDetailsServiceBuilder next = getBuilder().blockChain();
+		setBuilder(next);
+		return next;
 	}
 
 	public InMemoryClientDetailsServiceBuilder inMemory() throws Exception {

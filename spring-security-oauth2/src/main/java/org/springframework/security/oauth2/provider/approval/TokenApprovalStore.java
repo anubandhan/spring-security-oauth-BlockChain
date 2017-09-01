@@ -16,15 +16,15 @@
 
 package org.springframework.security.oauth2.provider.approval;
 
-import java.util.Collection;
-import java.util.Date;
-import java.util.HashSet;
-
 import org.springframework.security.oauth2.common.OAuth2AccessToken;
 import org.springframework.security.oauth2.provider.OAuth2Authentication;
 import org.springframework.security.oauth2.provider.approval.Approval.ApprovalStatus;
 import org.springframework.security.oauth2.provider.token.AuthorizationServerTokenServices;
 import org.springframework.security.oauth2.provider.token.TokenStore;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.HashSet;
 
 /**
  * An {@link ApprovalStore} that works with an existing {@link TokenStore}, extracting implicit {@link Approval
@@ -39,6 +39,19 @@ import org.springframework.security.oauth2.provider.token.TokenStore;
 public class TokenApprovalStore implements ApprovalStore {
 
 	private TokenStore store;
+
+	private static TokenApprovalStore tokenApprovalStore;
+
+	private TokenApprovalStore(){};
+
+	public static TokenApprovalStore getInstance(){
+
+		if (tokenApprovalStore==null){
+			tokenApprovalStore = new TokenApprovalStore();
+		}
+		return tokenApprovalStore;
+
+	}
 
 	/**
 	 * @param store the token store to set
