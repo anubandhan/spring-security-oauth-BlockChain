@@ -1,17 +1,17 @@
 package org.springframework.security.oauth.examples.sparklr.impl;
 
+import org.apache.log4j.Logger;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.oauth.examples.sparklr.PhotoInfo;
+import org.springframework.security.oauth.examples.sparklr.PhotoService;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
-
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.oauth.examples.sparklr.PhotoInfo;
-import org.springframework.security.oauth.examples.sparklr.PhotoService;
 
 /**
  * Basic implementation for the photo service.
@@ -20,7 +20,19 @@ import org.springframework.security.oauth.examples.sparklr.PhotoService;
  */
 public class PhotoServiceImpl implements PhotoService {
 
+	static final Logger log = Logger.getLogger(PhotoServiceImpl.class);
+
 	private List<PhotoInfo> photos;
+
+	private static PhotoServiceImpl photoService;
+	private PhotoServiceImpl(){};
+	public static PhotoServiceImpl getInstance(){
+		if(photoService==null){
+			photoService = new PhotoServiceImpl();
+		}
+		return photoService;
+	}
+
 
 	public Collection<PhotoInfo> getPhotosForCurrentUser(String username) {
 
@@ -35,13 +47,20 @@ public class PhotoServiceImpl implements PhotoService {
 	}
 
 	public InputStream loadPhoto(String id) {
+		log.info("PhotoServiceImpl :: id: "+id);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		if (authentication.getPrincipal() instanceof UserDetails) {
-			UserDetails details = (UserDetails) authentication.getPrincipal();
-			String username = details.getUsername();
+		log.info("PhotoServiceImpl :: authentication: "+authentication);
+		//if (authentication.getPrincipal() instanceof UserDetails) {
+			String username = (String) authentication.getPrincipal();
+			log.info("PhotoServiceImpl :: details: "+username);
+			//String username = details;
+			//log.info("PhotoServiceImpl :: username: "+username);
 			for (PhotoInfo photoInfo : getPhotos()) {
+				log.info("PhotoServiceImpl :: inside loop: photoInfo: "+photoInfo);
 				if (id.equals(photoInfo.getId()) && username.equals(photoInfo.getUserId())) {
+					log.info("PhotoServiceImpl ::inside IF id: "+id);
 					URL resourceURL = getClass().getResource(photoInfo.getResourceURL());
+					log.info("PhotoServiceImpl ::inside IF resourceURL: "+resourceURL);
 					if (resourceURL != null) {
 						try {
 							return resourceURL.openStream();
@@ -51,7 +70,7 @@ public class PhotoServiceImpl implements PhotoService {
 					}
 				}
 			}
-		}
+		//}
 		return null;
 	}
 

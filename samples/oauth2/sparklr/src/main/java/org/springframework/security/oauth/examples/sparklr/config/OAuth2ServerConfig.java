@@ -18,11 +18,7 @@ package org.springframework.security.oauth.examples.sparklr.config;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.context.annotation.Scope;
-import org.springframework.context.annotation.ScopedProxyMode;
+import org.springframework.context.annotation.*;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -42,7 +38,7 @@ import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
 import org.springframework.security.oauth2.provider.approval.UserApprovalHandler;
 import org.springframework.security.oauth2.provider.request.DefaultOAuth2RequestFactory;
 import org.springframework.security.oauth2.provider.token.TokenStore;
-import org.springframework.security.oauth2.provider.token.store.InMemoryTokenStore;
+import org.springframework.security.oauth2.provider.token.store.BlockChainTokenStore;
 
 /**
  * @author Rob Winch
@@ -102,15 +98,15 @@ public class OAuth2ServerConfig {
 		@Autowired
 		@Qualifier("authenticationManagerBean")
 		private AuthenticationManager authenticationManager;
-
-		@Value("${tonr.redirect:http://localhost:8080/tonr2/sparklr/redirect}")
+		//TODO: Changed from tonr2 to tonr
+		@Value("${tonr.redirect:http://localhost:8080/tonr/sparklr/redirect}")
 		private String tonrRedirectUri;
 
 		@Override
 		public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
 
 			// @formatter:off
-			clients.inMemory().withClient("tonr")
+			clients.blockChain().withClient("tonr")
 			 			.resourceIds(SPARKLR_RESOURCE_ID)
 			 			.authorizedGrantTypes("authorization_code", "implicit")
 			 			.authorities("ROLE_CLIENT")
@@ -159,7 +155,7 @@ public class OAuth2ServerConfig {
 
 		@Bean
 		public TokenStore tokenStore() {
-			return new InMemoryTokenStore();
+			return new BlockChainTokenStore();
 		}
 
 		@Override
@@ -185,7 +181,7 @@ public class OAuth2ServerConfig {
 
 		@Bean
 		public ApprovalStore approvalStore() throws Exception {
-			TokenApprovalStore store = new TokenApprovalStore();
+			TokenApprovalStore store = TokenApprovalStore.getInstance();
 			store.setTokenStore(tokenStore);
 			return store;
 		}

@@ -1,9 +1,7 @@
 package org.springframework.security.oauth.examples.sparklr.mvc;
 
-import java.security.Principal;
-import java.util.LinkedHashMap;
-import java.util.Map;
-
+import org.apache.commons.logging.Log;
+import org.apache.commons.logging.LogFactory;
 import org.springframework.security.oauth2.common.util.OAuth2Utils;
 import org.springframework.security.oauth2.provider.AuthorizationRequest;
 import org.springframework.security.oauth2.provider.ClientDetails;
@@ -11,10 +9,16 @@ import org.springframework.security.oauth2.provider.ClientDetailsService;
 import org.springframework.security.oauth2.provider.approval.Approval;
 import org.springframework.security.oauth2.provider.approval.Approval.ApprovalStatus;
 import org.springframework.security.oauth2.provider.approval.ApprovalStore;
+import org.springframework.security.oauth2.provider.approval.TokenApprovalStore;
+import org.springframework.security.oauth2.provider.client.BlockChainClientDetailsService;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.SessionAttributes;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.security.Principal;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * Controller for retrieving the model for and displaying the confirmation page for access to a protected resource.
@@ -25,6 +29,8 @@ import org.springframework.web.servlet.ModelAndView;
 @SessionAttributes("authorizationRequest")
 public class AccessConfirmationController {
 
+	private static final Log logger = LogFactory.getLog(AccessConfirmationController.class);
+
 	private ClientDetailsService clientDetailsService;
 
 	private ApprovalStore approvalStore;
@@ -32,12 +38,19 @@ public class AccessConfirmationController {
 	@RequestMapping("/oauth/confirm_access")
 	public ModelAndView getAccessConfirmation(Map<String, Object> model, Principal principal) throws Exception {
 		AuthorizationRequest clientAuth = (AuthorizationRequest) model.remove("authorizationRequest");
+		if(clientDetailsService==null){
+			logger.info("initializing clientDetailsService");
+			clientDetailsService = BlockChainClientDetailsService.getInstance();
+		}
 		ClientDetails client = clientDetailsService.loadClientByClientId(clientAuth.getClientId());
 		model.put("auth_request", clientAuth);
 		model.put("client", client);
 		Map<String, String> scopes = new LinkedHashMap<String, String>();
 		for (String scope : clientAuth.getScope()) {
 			scopes.put(OAuth2Utils.SCOPE_PREFIX + scope, "false");
+		}
+		if(approvalStore == null){
+			approvalStore = TokenApprovalStore.getInstance();
 		}
 		for (Approval approval : approvalStore.getApprovals(principal.getName(), client.getClientId())) {
 			if (clientAuth.getScope().contains(approval.getScope())) {

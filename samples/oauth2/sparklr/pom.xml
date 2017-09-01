@@ -116,10 +116,39 @@
 
 	<dependencies>
 
+		<!-- https://mvnrepository.com/artifact/log4j/log4j -->
+		<!-- Added later -->
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>jcl-over-slf4j</artifactId>
+			<version>1.7.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-log4j12</artifactId>
+			<version>1.7.0</version>
+			<scope>runtime</scope>
+		</dependency>
+		<dependency>
+			<groupId>log4j</groupId>
+			<artifactId>log4j</artifactId>
+			<version>1.2.14</version>
+			<scope>runtime</scope>
+		</dependency>
+		<!--  Added later -->
+
+
 		<dependency>
 			<groupId>${project.groupId}</groupId>
 			<artifactId>spring-security-oauth2</artifactId>
-			<version>${project.version}</version>
+			<version>3.0.0.BUILD-SNAPSHOT</version>
 		</dependency>
 
 		<dependency>
@@ -191,6 +220,12 @@
 			<version>4.3.3</version>
 			<scope>test</scope>
 		</dependency>
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>log4j-over-slf4j</artifactId>
+			<version>1.8.0-alpha2</version>
+		</dependency>
+
 
 	</dependencies>
 

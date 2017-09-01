@@ -1,22 +1,24 @@
 package org.springframework.security.oauth.examples.sparklr.mvc;
 
-import java.io.ByteArrayOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.security.Principal;
-import java.util.Collection;
-import java.util.Iterator;
-
+import org.apache.log4j.Logger;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth.examples.sparklr.PhotoInfo;
 import org.springframework.security.oauth.examples.sparklr.PhotoService;
+import org.springframework.security.oauth.examples.sparklr.impl.PhotoServiceImpl;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.security.Principal;
+import java.util.Collection;
+import java.util.Iterator;
 
 /**
  * @author Ryan Heaton
@@ -25,11 +27,15 @@ import org.springframework.web.bind.annotation.ResponseBody;
 @Controller
 public class PhotoController {
 
-	private PhotoService photoService;
+	private PhotoService photoService = PhotoServiceImpl.getInstance();
+	static final Logger log = Logger.getLogger(PhotoController.class);
 
 	@RequestMapping("/photos/{photoId}")
 	public ResponseEntity<byte[]> getPhoto(@PathVariable("photoId") String id) throws IOException {
 		InputStream photo = getPhotoService().loadPhoto(id);
+
+		log.info("photos Received for : "+id);
+		log.info("photos are : "+ photo);
 		if (photo == null) {
 			return new ResponseEntity<byte[]>(HttpStatus.NOT_FOUND);
 		}
@@ -49,6 +55,7 @@ public class PhotoController {
 
 	@RequestMapping(value = "/photos", params = "format=json")
 	public ResponseEntity<String> getJsonPhotos(Principal principal) {
+		log.info("photos Called ");
 		Collection<PhotoInfo> photos = getPhotoService().getPhotosForCurrentUser(principal.getName());
 		StringBuilder out = new StringBuilder();
 		out.append("{ \"photos\" : [ ");
@@ -68,6 +75,8 @@ public class PhotoController {
 
 	@RequestMapping(value = "/photos", params = "format=xml")
 	public ResponseEntity<String> getXmlPhotos(Principal principal) {
+		log.info("photos Called ");
+		log.info("photos Called for User:"+ principal.getName());
 		Collection<PhotoInfo> photos = photoService.getPhotosForCurrentUser(principal.getName());
 		StringBuilder out = new StringBuilder();
 		out.append("<photos>");
@@ -78,6 +87,8 @@ public class PhotoController {
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.set("Content-Type", "application/xml");
+
+		log.info("photos response: "+out.toString());
 		return new ResponseEntity<String>(out.toString(), headers, HttpStatus.OK);
 	}
 
